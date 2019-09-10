@@ -1,0 +1,4 @@
+spring:
+  redis:
+    timeout: 7000
+    password: xxx
