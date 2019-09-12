@@ -4,7 +4,7 @@ import com.yuyuko.idempotent.DenyException;
 import com.yuyuko.idempotent.redis.RedisUtils;
 
 public class IdempotentTemplate {
-    RedisUtils redisUtils;
+    private RedisUtils redisUtils;
 
     public IdempotentTemplate(RedisUtils idempotentRedisUtils) {
         this.redisUtils = idempotentRedisUtils;

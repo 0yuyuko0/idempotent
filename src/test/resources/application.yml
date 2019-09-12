@@ -1,4 +1,16 @@
 spring:
   redis:
-    timeout: 7000
-    password: xxx
+    #redis信息
+  application:
+    name: idempotent
+dubbo:
+  scan:
+    base-packages: com.yuyuko.idempotent.dubbo.api.impl
+  consumer:
+    check: false
+    scope: local
+  registry:
+    address: dubbo://127.0.0.1:20880
+    register: false
+    subscribe: false
+    check: false

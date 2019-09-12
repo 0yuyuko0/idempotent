@@ -1,4 +1,4 @@
-package com.yuyuko.idempotent.utils;
+package com.yuyuko.idempotent.spring.utils;
 
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.AdvisedSupport;

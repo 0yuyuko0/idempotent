@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.yuyuko.idempotent.autoconfigure.IdempotentAutoConfiguration
+  com.yuyuko.idempotent.spring.autoconfigure.IdempotentAutoConfiguration

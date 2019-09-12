@@ -1,4 +1,4 @@
-package com.yuyuko.idempotent.bean;
+package com.yuyuko.idempotent.spring;
 
 import com.yuyuko.idempotent.annotation.Idempotent;
 import org.springframework.stereotype.Component;

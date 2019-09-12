@@ -1,4 +1,4 @@
-package com.yuyuko.idempotent.bean;
+package com.yuyuko.idempotent.spring;
 
 public class TestPOJO {
     private String username;

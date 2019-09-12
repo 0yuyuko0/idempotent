@@ -1,7 +1,8 @@
-package com.yuyuko.idempotent.annotation;
+package com.yuyuko.idempotent.spring;
 
-import com.yuyuko.idempotent.redis.RedisUtils;
-import com.yuyuko.idempotent.utils.SpringProxyUtils;
+import com.yuyuko.idempotent.spring.utils.SpringProxyUtils;
+import com.yuyuko.idempotent.annotation.Idempotent;
+import com.yuyuko.idempotent.api.IdempotentTemplate;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,8 @@ public class IdempotentScanner extends AbstractAutoProxyCreator {
      */
     private static final Set<String> PROXY_SET = new HashSet<>();
 
-    public IdempotentScanner(RedisUtils idempotentRedisUtils) {
-        interceptor = new IdempotentInterceptor(idempotentRedisUtils);
+    public IdempotentScanner(IdempotentTemplate idempotentTemplate) {
+        interceptor = new IdempotentInterceptor(idempotentTemplate);
     }
 
     @Override
