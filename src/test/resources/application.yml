@@ -1,8 +1,6 @@
 spring:
   redis:
     #redis信息
-  application:
-    name: idempotent
 dubbo:
   scan:
     base-packages: com.yuyuko.idempotent.dubbo.api.impl
@@ -14,3 +12,5 @@ dubbo:
     register: false
     subscribe: false
     check: false
+  application:
+    name: idempotent

@@ -1,6 +1,6 @@
 package com.yuyuko.idempotent.api;
 
-import com.yuyuko.idempotent.DenyException;
+import com.yuyuko.idempotent.RejectedException;
 import com.yuyuko.idempotent.redis.RedisUtils;
 
 public class IdempotentTemplate {
@@ -40,7 +40,7 @@ public class IdempotentTemplate {
         int maxExecutionTime = idempotentInfo.getMaxExecutionTime();
         boolean success = redisUtils.setIfAbsent(id, maxExecutionTime);
         if (!success)
-            throw new DenyException(idempotentInfo.getId());
+            throw new RejectedException(idempotentInfo.getId());
     }
 
     private void afterThrowing(IdempotentInfo idempotentInfo, Throwable ex) {

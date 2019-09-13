@@ -61,4 +61,9 @@ public @interface Idempotent {
      * @return
      */
     String[] noRollbackForClassName() default {};
+
+    /**
+     * 幂等操作被拒绝时返回的值，用spring-el解析
+     */
+    String returnValWhenRejected() default "null";
 }
