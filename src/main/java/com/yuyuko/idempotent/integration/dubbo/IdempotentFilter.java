@@ -3,6 +3,7 @@ package com.yuyuko.idempotent.integration.dubbo;
 import com.yuyuko.idempotent.RejectedException;
 import com.yuyuko.idempotent.annotation.Idempotent;
 import com.yuyuko.idempotent.api.AbstractIdempotentExecutor;
+import com.yuyuko.idempotent.api.IdempotentManager;
 import com.yuyuko.idempotent.api.IdempotentTemplate;
 import com.yuyuko.idempotent.expression.ExpressionResolver;
 import com.yuyuko.idempotent.utils.ReflectionUtils;
@@ -11,10 +12,7 @@ import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 
@@ -24,8 +22,8 @@ public class IdempotentFilter implements Filter {
 
     private IdempotentTemplate idempotentTemplate;
 
-    public void setIdempotentTemplate(IdempotentTemplate idempotentTemplate) {
-        this.idempotentTemplate = idempotentTemplate;
+    public void setIdempotentManager(IdempotentManager idempotentManager) {
+        this.idempotentTemplate = new IdempotentTemplate(idempotentManager);
     }
 
     @Override

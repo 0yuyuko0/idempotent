@@ -1,6 +1,6 @@
 spring:
   redis:
-    #redis信息
+    port: 6379
 dubbo:
   scan:
     base-packages: com.yuyuko.idempotent.dubbo.api.impl

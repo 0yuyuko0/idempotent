@@ -16,28 +16,9 @@ public abstract class AbstractIdempotentExecutor implements IdempotentExecutor {
 
     public AbstractIdempotentExecutor(Method method, Object[] args,
                                       Idempotent idempotentAnnotation) {
-        IdempotentInfo idempotentInfo = new IdempotentInfo();
-        idempotentInfo.setId(
-                ExpressionResolver.resolveId(method, args, idempotentAnnotation.id())
-        );
-        idempotentInfo.setMaxExecutionTime(idempotentAnnotation.maxExecutionTime());
-        idempotentInfo.setDuration(idempotentAnnotation.duration());
-        idempotentInfo.setPrefix(idempotentAnnotation.prefix());
-        Set<RollbackRule> rollbackRules = new LinkedHashSet<>();
-        for (Class<?> rbRule : idempotentAnnotation.rollbackFor()) {
-            rollbackRules.add(new RollbackRule(rbRule));
-        }
-        for (String rbRule : idempotentAnnotation.rollbackForClassName()) {
-            rollbackRules.add(new RollbackRule(rbRule));
-        }
-        for (Class<?> rbRule : idempotentAnnotation.noRollbackFor()) {
-            rollbackRules.add(new NoRollbackRule(rbRule));
-        }
-        for (String rbRule : idempotentAnnotation.noRollbackForClassName()) {
-            rollbackRules.add(new NoRollbackRule(rbRule));
-        }
-        idempotentInfo.setRollbackRules(rollbackRules);
-        this.idempotentInfo = idempotentInfo;
+        this.idempotentInfo =
+                IdempotentInfo.IdempotentInfoBuilder.build(idempotentAnnotation,
+                        ExpressionResolver.resolveId(method, args, idempotentAnnotation.id()));
     }
 
     @Override

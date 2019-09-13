@@ -46,6 +46,25 @@ public class TestPOJO {
 hello yuyuko
 2019-09-12 22:59:56.729  INFO 11428 --- [           main] c.y.i.i.dubbo.IdempotentFilter           : 拒绝执行方法[test],幂等操作id[idem:yuyuko]
 ```
+###手动模式
+```java
+@Autowired
+IdempotentApi idempotentApi;
+
+@Test
+public void test(){
+    IdempotentInfo hello = IdempotentInfo.IdempotentInfoBuilder.builder().id("2").build();
+    idempotentApi.prepare(hello);
+    try{
+        System.out.println("hello")
+    }catch (RuntimeException ex){
+        idempotentApi.afterThrowing(hello.getId());
+    }
+    idempotentApi.after(hello);
+}
+```
+
 ### dubbo
 将@Idempotent注解标注在dubbo的接口api上（注意是接口！）,方法重复调用时默认返回null <br>
 所以请不要将注解标注在带返回值的具有副作用方法上.
+

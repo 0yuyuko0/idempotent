@@ -3,6 +3,7 @@ package com.yuyuko.idempotent.spring;
 import com.yuyuko.idempotent.RejectedException;
 import com.yuyuko.idempotent.annotation.Idempotent;
 import com.yuyuko.idempotent.api.AbstractIdempotentExecutor;
+import com.yuyuko.idempotent.api.IdempotentManager;
 import com.yuyuko.idempotent.api.IdempotentTemplate;
 import com.yuyuko.idempotent.expression.ExpressionResolver;
 import com.yuyuko.idempotent.utils.ReflectionUtils;
@@ -12,11 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.BridgeMethodResolver;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.ClassUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 public class IdempotentInterceptor implements MethodInterceptor {
@@ -24,8 +22,8 @@ public class IdempotentInterceptor implements MethodInterceptor {
 
     private IdempotentTemplate idempotentTemplate;
 
-    public IdempotentInterceptor(IdempotentTemplate idempotentTemplate) {
-        this.idempotentTemplate = idempotentTemplate;
+    public IdempotentInterceptor(IdempotentManager idempotentManager) {
+        this.idempotentTemplate = new IdempotentTemplate(idempotentManager);
     }
 
     @Override

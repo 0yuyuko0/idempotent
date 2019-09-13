@@ -1,5 +1,6 @@
 package com.yuyuko.idempotent.spring;
 
+import com.yuyuko.idempotent.api.IdempotentManager;
 import com.yuyuko.idempotent.spring.utils.SpringProxyUtils;
 import com.yuyuko.idempotent.annotation.Idempotent;
 import com.yuyuko.idempotent.api.IdempotentTemplate;
@@ -27,8 +28,8 @@ public class IdempotentScanner extends AbstractAutoProxyCreator {
      */
     private static final Set<String> PROXY_SET = new HashSet<>();
 
-    public IdempotentScanner(IdempotentTemplate idempotentTemplate) {
-        interceptor = new IdempotentInterceptor(idempotentTemplate);
+    public IdempotentScanner(IdempotentManager idempotentManager) {
+        interceptor = new IdempotentInterceptor(idempotentManager);
     }
 
     @Override

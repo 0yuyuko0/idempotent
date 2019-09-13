@@ -1,20 +1,26 @@
 package com.yuyuko.idempotent.annotation;
 
 import com.yuyuko.idempotent.api.IdempotentInfo;
+import com.yuyuko.idempotent.api.NoRollbackRule;
+import com.yuyuko.idempotent.api.RollbackRule;
+import com.yuyuko.idempotent.expression.ExpressionResolver;
 import com.yuyuko.idempotent.parameters.Id;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Idempotent {
     /**
      * 幂等操作的唯一标识，使用spring el表达式 用#来引用方法参数，在低于jdk8的版本中使用@Id来代指参数
+     *
+     * @return Spring-EL expression
      * @see Id
-     * @return  Spring-EL expression
      */
     String id();
 

@@ -1,13 +1,12 @@
 package com.yuyuko.idempotent.api;
 
 import com.yuyuko.idempotent.RejectedException;
-import com.yuyuko.idempotent.redis.RedisUtils;
 
 public class IdempotentTemplate {
-    private RedisUtils redisUtils;
+    private IdempotentManager idempotentManager;
 
-    public IdempotentTemplate(RedisUtils idempotentRedisUtils) {
-        this.redisUtils = idempotentRedisUtils;
+    public IdempotentTemplate(IdempotentManager idempotentManager) {
+        this.idempotentManager = idempotentManager;
     }
 
     public Object execute(IdempotentExecutor business) throws Throwable {
@@ -15,36 +14,19 @@ public class IdempotentTemplate {
         if (idempotentInfo == null)
             throw new RuntimeException("幂等操作信息为null");
 
-        prepareIdempotent(idempotentInfo);
+        this.idempotentManager.prepare(idempotentInfo);
 
         Object res;
 
         try {
             res = business.execute();
         } catch (Throwable ex) {
-            afterThrowing(idempotentInfo, ex);
+            this.idempotentManager.afterThrowing(idempotentInfo, ex);
             throw ex;
         }
 
-        after(idempotentInfo);
+        this.idempotentManager.after(idempotentInfo);
 
         return res;
-    }
-
-    private void after(IdempotentInfo idempotentInfo) {
-        redisUtils.setIfPresent(idempotentInfo.getId(), idempotentInfo.getDuration());
-    }
-
-    private void prepareIdempotent(IdempotentInfo idempotentInfo) {
-        String id = idempotentInfo.getId();
-        int maxExecutionTime = idempotentInfo.getMaxExecutionTime();
-        boolean success = redisUtils.setIfAbsent(id, maxExecutionTime);
-        if (!success)
-            throw new RejectedException(idempotentInfo.getId());
-    }
-
-    private void afterThrowing(IdempotentInfo idempotentInfo, Throwable ex) {
-        if (idempotentInfo.rollbackOn(ex))
-            redisUtils.delete(idempotentInfo.getId());
     }
 }

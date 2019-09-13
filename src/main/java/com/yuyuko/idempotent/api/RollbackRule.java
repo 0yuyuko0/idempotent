@@ -22,11 +22,6 @@ public class RollbackRule {
         this.exceptionName = clazz.getName();
     }
 
-    public String getExceptionName() {
-        return this.exceptionName;
-    }
-
-
     public int getDepth(Throwable ex) {
         return getDepth(ex.getClass(), 0);
     }

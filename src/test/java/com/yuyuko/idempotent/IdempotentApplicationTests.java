@@ -1,5 +1,7 @@
 package com.yuyuko.idempotent;
 
+import com.yuyuko.idempotent.api.IdempotentApi;
+import com.yuyuko.idempotent.api.IdempotentInfo;
 import com.yuyuko.idempotent.dubbo.TestApiConsumer;
 import com.yuyuko.idempotent.spring.TestBean;
 import com.yuyuko.idempotent.redis.RedisUtils;
@@ -19,9 +21,12 @@ public class IdempotentApplicationTests {
 
     @Autowired
     RedisUtils redisUtils;
-    
+
     @Autowired
     TestApiConsumer testApiConsumer;
+
+    @Autowired
+    IdempotentApi idempotentApi;
 
     @Test
     public void testSpring() {
@@ -29,8 +34,24 @@ public class IdempotentApplicationTests {
         testBean.hello(new TestPOJO("yuyuko"));
     }
 
+    @Test(expected = RejectedException.class)
+    public void testManualMode() {
+        IdempotentInfo hello = IdempotentInfo.IdempotentInfoBuilder.builder().id("2").build();
+        idempotentApi.prepare(hello);
+        try {
+            System.out.println("hello");
+            throw new RuntimeException();
+        }catch (RuntimeException ex){
+            idempotentApi.afterThrowing(hello.getId());
+        }
+        idempotentApi.prepare(hello);
+        System.out.println("hello");
+        idempotentApi.after(hello);
+        idempotentApi.prepare(hello);
+    }
+
     @Test
-    public void testDubbo(){
+    public void testDubbo() {
         testApiConsumer.hello(new TestPOJO("yuyuko"));
         testApiConsumer.hello(new TestPOJO("yuyuko"));
     }

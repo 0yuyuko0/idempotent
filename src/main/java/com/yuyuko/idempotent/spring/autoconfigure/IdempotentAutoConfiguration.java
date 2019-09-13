@@ -1,5 +1,7 @@
 package com.yuyuko.idempotent.spring.autoconfigure;
 
+import com.yuyuko.idempotent.api.IdempotentApi;
+import com.yuyuko.idempotent.api.IdempotentManager;
 import com.yuyuko.idempotent.api.IdempotentTemplate;
 import com.yuyuko.idempotent.redis.RedisUtils;
 import com.yuyuko.idempotent.spring.IdempotentScanner;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ConditionalOnBean(RedisConnectionFactory.class)
@@ -19,15 +22,20 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class IdempotentAutoConfiguration {
     @Bean
     public IdempotentScanner idempotentScanner() {
-        return new IdempotentScanner(idempotentTemplate());
+        return new IdempotentScanner(idempotentManager(idempotentRedisUtils()));
+    }
+
+    @Bean
+    public IdempotentApi idempotentApi(IdempotentManager idempotentManager) {
+        return new IdempotentApi(idempotentManager);
     }
 
     @Autowired
     RedisConnectionFactory connectionFactory;
 
     @Bean
-    public IdempotentTemplate idempotentTemplate(){
-        return new IdempotentTemplate(idempotentRedisUtils());
+    public IdempotentManager idempotentManager(RedisUtils redisUtils) {
+        return new IdempotentManager(redisUtils);
     }
 
     @Bean
